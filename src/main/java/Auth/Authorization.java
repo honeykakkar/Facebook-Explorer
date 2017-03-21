@@ -14,6 +14,12 @@ import com.restfb.Version;
 
 public class Authorization {
 
+    // accessToken represents an access token and expiration date pair.
+    private AccessToken accessToken;
+
+    // fbClient specifies how a Facebook Graph API client must operate.
+    private FacebookClient fbClient;
+
     // Default constructor to get a default Facebook client
     public Authorization() {
         this.fbClient = new DefaultFacebookClient(Version.LATEST);
@@ -23,12 +29,6 @@ public class Authorization {
     public Authorization(String accessToken) {
         this.fbClient = new DefaultFacebookClient(accessToken, Version.LATEST);
     }
-
-    // accessToken represents an access token and expiration date pair.
-    private AccessToken accessToken;
-
-    // fbClient specifies how a Facebook Graph API client must operate.
-    private FacebookClient fbClient;
 
     // Method to get the current access token
     public AccessToken getAccessToken() {
