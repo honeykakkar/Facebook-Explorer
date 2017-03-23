@@ -12,7 +12,10 @@ import com.restfb.FacebookClient;
 import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Version;
 
-public class Authorization {
+// This class represents a Facebook client.
+// It contains methods to obtain the authorization required to make the API calls through access tokens.
+
+public class AuthorizedClient {
 
     // accessToken represents an access token and expiration date pair.
     private AccessToken accessToken;
@@ -21,12 +24,12 @@ public class Authorization {
     private FacebookClient fbClient;
 
     // Default constructor to get a default Facebook client
-    public Authorization() {
+    public AuthorizedClient() {
         this.fbClient = new DefaultFacebookClient(Version.LATEST);
     }
 
     // Constructor to get a Facebook client with a given access token
-    public Authorization(String accessToken) {
+    public AuthorizedClient(String accessToken) {
         this.fbClient = new DefaultFacebookClient(accessToken, Version.LATEST);
     }
 
@@ -49,12 +52,24 @@ public class Authorization {
         this.fbClient = new DefaultFacebookClient(this.accessToken.getAccessToken(), appSecret, Version.LATEST);
     }
 
+    // Method to obtain the authorization using application token
+    public void userAuthorization(String appID, String appSecret, String redirectURI, String verificationCode) {
+        if (this.accessToken == null) {
+            AccessToken tempToken = fbClient.obtainUserAccessToken(appID, appSecret, redirectURI, verificationCode);
+            FacebookClient tempClient = new DefaultFacebookClient(tempToken.getAccessToken(), Version.LATEST);
+
+            this.accessToken = tempClient.obtainExtendedAccessToken(appID, appSecret, tempToken.getAccessToken());
+            this.fbClient = new DefaultFacebookClient(this.accessToken.getAccessToken(), Version.LATEST);
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println("--- Testing the Authorization class ---\n");
+        System.out.println("--- Testing the AuthorizedClient class ---\n");
         System.out.println("--- Testing the authorization by application access token ---\n");
         String appID = "<Enter your application ID here>";
         String appSecret = "<Enter your application secret here>";
-        Authorization authorize = new Authorization();
+        AuthorizedClient authorize = new AuthorizedClient();
+
         authorize.appAuthorization(appID, appSecret);
         System.out.println("Access token type: " + authorize.getAccessToken().getTokenType());
         System.out.println("Access token value: " + authorize.getAccessToken().getAccessToken());
