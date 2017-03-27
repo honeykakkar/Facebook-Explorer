@@ -11,6 +11,8 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Version;
+import com.restfb.exception.FacebookException;
+import com.restfb.exception.FacebookOAuthException;
 
 // This class represents a Facebook client.
 // It contains methods to obtain the authorization required to make the API calls through access tokens.
@@ -44,7 +46,7 @@ public class AuthorizedClient {
     }
 
     // Method to obtain the authorization using application token
-    public void appAuthorization(String appID, String appSecret) {
+    public void appAuthorization(String appID, String appSecret) throws FacebookOAuthException {
         // Obtaining application access token
         this.accessToken = this.fbClient.obtainAppAccessToken(appID, appSecret);
 
@@ -69,9 +71,12 @@ public class AuthorizedClient {
         String appID = "<Enter your application ID here>";
         String appSecret = "<Enter your application secret here>";
         AuthorizedClient authorize = new AuthorizedClient();
-
-        authorize.appAuthorization(appID, appSecret);
-        System.out.println("Access token type: " + authorize.getAccessToken().getTokenType());
-        System.out.println("Access token value: " + authorize.getAccessToken().getAccessToken());
+        try {
+            authorize.appAuthorization(appID, appSecret);
+            System.out.println("Access token type: " + authorize.getAccessToken().getTokenType());
+            System.out.println("Access token value: " + authorize.getAccessToken().getAccessToken());
+        } catch (FacebookOAuthException exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 }

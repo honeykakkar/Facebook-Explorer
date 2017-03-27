@@ -29,39 +29,56 @@ public class SearchPost {
     }
 
     // Method to get the count of likes on a post with a given postID
-    private Long getLikesCount(String postID) throws FacebookGraphException {
+    private Long getLikesCount(String postID) throws NullPointerException {
         // Obtaining the reference of authorized Facebook client required to make the API call
         FacebookClient fbClient = authorizedClient.getFbClient();
 
-        // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
-        Post postWithLikes = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "likes.limit(0).summary(true)"));
+        try {
+            // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
+            Post postWithLikes = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "likes.limit(0).summary(true)"));
 
-        // Return the count of likes on the post with the given postID
-        return postWithLikes.getLikesCount();
+            // Return the count of likes on the post with the given postID
+            return postWithLikes.getLikesCount();
+
+        } catch (FacebookGraphException exception) {
+            System.out.println(exception.getMessage());
+            return null;
+        }
     }
 
     // Method to get the count of comments on a post with a given postID
-    private Long getCommentsCount(String postID) throws FacebookGraphException {
+    private Long getCommentsCount(String postID) throws NullPointerException {
         // Obtaining the reference of authorized Facebook client required to make the API call
         FacebookClient fbClient = authorizedClient.getFbClient();
+        try {
+            // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
+            Post postWithComments = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "comments.limit(0).summary(true)"));
 
-        // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
-        Post postWithComments = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "comments.limit(0).summary(true)"));
+            // Return the count of comments on the post with the given postID
+            return postWithComments.getCommentsCount();
 
-        // Return the count of comments on the post with the given postID
-        return postWithComments.getCommentsCount();
+        } catch (FacebookGraphException exception) {
+            System.out.println(exception.getMessage());
+            return null;
+        }
     }
 
     // Method to get the count of shares of a post with a given postID
-    private Long getSharesCount(String postID) throws FacebookGraphException {
+    private Long getSharesCount(String postID) throws NullPointerException {
         // Obtaining the reference of authorized Facebook client required to make the API call
         FacebookClient fbClient = authorizedClient.getFbClient();
 
-        // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
-        Post postWithShares = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "shares.limit(0).summary(true)"));
+        try {
+            // Fetches a single Graph API object, mapping the result to an instance of objectType (Post in this case).
+            Post postWithShares = fbClient.fetchObject(postID, Post.class, Parameter.with("fields", "shares.limit(0).summary(true)"));
 
-        // Return the count of comments on the post with the given postID
-        return postWithShares.getSharesCount();
+            // Return the count of comments on the post with the given postID
+            return postWithShares.getSharesCount();
+
+        } catch (FacebookGraphException exception) {
+            System.out.println(exception.getMessage());
+            return null;
+        }
     }
 
     public static void main(String[] args) {
@@ -73,7 +90,7 @@ public class SearchPost {
             System.out.println("Total likes on the post: " + postSearcher.getLikesCount("<Enter your post ID here>"));
             System.out.println("Total comments on the post: " + postSearcher.getCommentsCount("<Enter your post ID here>"));
             System.out.println("Total shares on the post: " + postSearcher.getSharesCount("<Enter your post ID here>"));
-        } catch (FacebookGraphException exception) {
+        } catch (FacebookOAuthException exception) {
             System.out.println(exception.getMessage());
         }
     }
