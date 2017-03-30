@@ -11,7 +11,6 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Version;
-import com.restfb.exception.FacebookException;
 import com.restfb.exception.FacebookOAuthException;
 
 // This class represents a Facebook client.
@@ -49,7 +48,6 @@ public class AuthorizedClient {
     public void appAuthorization(String appID, String appSecret) throws FacebookOAuthException {
         // Obtaining application access token
         this.accessToken = this.fbClient.obtainAppAccessToken(appID, appSecret);
-
         // Re-initializing Facebook client with the application access token
         this.fbClient = new DefaultFacebookClient(this.accessToken.getAccessToken(), appSecret, Version.LATEST);
     }
